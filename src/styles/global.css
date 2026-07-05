@@ -554,6 +554,36 @@ h3 {
   font-family: "Cinzel", serif;
 }
 
+.name-family-pair {
+  display: grid !important;
+  justify-items: center;
+  gap: 0.18rem;
+  width: min(100%, 640px);
+}
+
+.name-family-pair .name-text {
+  display: block;
+}
+
+.name-family {
+  display: block !important;
+  max-width: min(92vw, 520px);
+  padding: 0.2rem 0.65rem 0.4rem;
+  color: rgba(248, 242, 231, 0.84) !important;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(0.76rem, 1.45vw, 0.92rem) !important;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  text-wrap: balance;
+  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
+  border-bottom: 1px solid rgba(201, 161, 74, 0.32);
+}
+
+.engraved-line:nth-child(2) {
+  margin: 0.02rem 0 -0.1rem;
+}
+
 .family-lines {
   display: grid;
   gap: 0.45rem;
@@ -574,6 +604,49 @@ h3 {
   border-radius: 6px;
   object-fit: cover;
   background: linear-gradient(145deg, rgba(201, 161, 74, 0.3), rgba(21, 17, 10, 0.6));
+}
+
+.scroll-cue {
+  position: fixed;
+  left: 50%;
+  bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 5.15rem);
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+  min-height: 38px;
+  padding: 0.42rem 0.72rem;
+  border: 1px solid rgba(201, 161, 74, 0.36);
+  border-radius: 999px;
+  color: var(--gold);
+  background: rgba(10, 9, 7, 0.68);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(248, 242, 231, 0.08);
+  font-family: "Cinzel", serif;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.scroll-cue svg {
+  animation: scrollCueBounce 1.35s ease-in-out infinite;
+}
+
+.scroll-cue.hidden {
+  visibility: hidden;
+}
+
+@keyframes scrollCueBounce {
+  0%, 100% {
+    transform: translateY(-2px);
+  }
+
+  50% {
+    transform: translateY(3px);
+  }
 }
 
 .two-column {
@@ -1425,6 +1498,17 @@ h3 {
   }
 
   .engraved-names h1 {
+    text-align: left;
+  }
+
+  .name-family-pair {
+    justify-items: start;
+  }
+
+  .name-family {
+    max-width: 560px;
+    padding-left: 0;
+    padding-right: 0;
     text-align: left;
   }
 }
@@ -4593,6 +4677,19 @@ body,
     justify-self: center;
     background: linear-gradient(to right, transparent, rgba(201, 161, 74, 0.7), transparent);
   }
+
+  .name-family-pair {
+    width: min(100%, 21rem);
+    gap: 0.14rem;
+  }
+
+  .name-family {
+    max-width: 19.5rem;
+    padding: 0.08rem 0.35rem 0.34rem;
+    font-size: 0.74rem !important;
+    line-height: 1.26;
+    text-align: center;
+  }
 }
 
 /* Real-phone performance pass: keep motion smooth by avoiding expensive mobile paint work. */
@@ -4679,6 +4776,70 @@ body,
   .arabic-text.cinematic-arabic {
     text-shadow: 0 0 22px rgba(201, 161, 74, 0.26) !important;
     transform: translateZ(0);
+  }
+}
+
+/* Final couple-name emphasis: keep family text small while names stay bold and catchy. */
+.engraved-names h1 {
+  justify-items: center !important;
+  gap: 0.08em !important;
+  font-size: clamp(4.8rem, 16vw, 10.5rem) !important;
+}
+
+.name-family-pair {
+  justify-items: center !important;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.name-family-pair .name-text {
+  color: transparent;
+  background: linear-gradient(110deg, #fffdf9 4%, #e7c86f 36%, #fff0ad 54%, #c99f3c 82%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.08em;
+  font-weight: 800;
+  line-height: 0.82;
+  text-shadow: none;
+  filter: drop-shadow(0 0 18px rgba(201, 161, 74, 0.28));
+}
+
+.engraved-line:nth-child(2) {
+  font-size: 0.38em !important;
+  line-height: 0.7 !important;
+  margin: -0.04em 0 -0.08em !important;
+}
+
+.name-family {
+  margin-top: 0.12rem;
+  font-size: clamp(0.72rem, 1.25vw, 0.86rem) !important;
+}
+
+@media (max-width: 760px) {
+  .engraved-names h1 {
+    gap: 0.09em !important;
+    font-size: clamp(4.3rem, 23vw, 6.4rem) !important;
+  }
+
+  .name-family-pair {
+    width: min(100%, 23rem);
+    justify-items: center !important;
+  }
+
+  .name-family-pair .name-text {
+    font-size: 1.12em;
+    line-height: 0.82;
+  }
+
+  .name-family {
+    max-width: 20.5rem;
+    font-size: 0.72rem !important;
+    line-height: 1.24;
+  }
+
+  .scroll-cue {
+    bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 4.65rem);
   }
 }
 

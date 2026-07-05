@@ -1,23 +1,24 @@
 import { motion, useReducedMotion } from "framer-motion";
 
-function NameLine({ children, delay }) {
+function NameLine({ children, family, delay }) {
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
   const shouldReduceMotion = reduceMotion && !isMobile;
 
   return (
     <motion.span
-      className="engraved-line"
+      className="engraved-line name-family-pair"
       initial={shouldReduceMotion ? false : { opacity: 0, y: 16, filter: "blur(8px)" }}
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{ duration: 1.1, delay, ease: "easeOut" }}
     >
-      {children}
+      <span className="name-text">{children}</span>
+      {family && <span className="name-family">{family}</span>}
     </motion.span>
   );
 }
 
-export default function EngravedNames({ brideName, groomName }) {
+export default function EngravedNames({ brideName, groomName, brideFamily, groomFamily }) {
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
   const shouldReduceMotion = reduceMotion && !isMobile;
@@ -32,9 +33,9 @@ export default function EngravedNames({ brideName, groomName }) {
         transition={{ duration: 2, ease: "easeOut" }}
       />
       <h1>
-        <NameLine delay={0.15}>{groomName}</NameLine>
+        <NameLine delay={0.15} family={groomFamily}>{groomName}</NameLine>
         <NameLine delay={0.42}>&</NameLine>
-        <NameLine delay={0.68}>{brideName}</NameLine>
+        <NameLine delay={0.68} family={brideFamily}>{brideName}</NameLine>
       </h1>
       <motion.span
         className="name-shine"

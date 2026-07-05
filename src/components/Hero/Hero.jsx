@@ -1,14 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ImageIcon, Moon } from "lucide-react";
+import { ChevronDown, ImageIcon, Moon } from "lucide-react";
 import EngravedNames from "./EngravedNames";
 
 export default function Hero({ invitation }) {
   const { couple, messages } = invitation;
   const [photoMissing, setPhotoMissing] = useState(false);
+  const [showScrollCue, setShowScrollCue] = useState(true);
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
   const shouldReduceMotion = reduceMotion && !isMobile;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 32) {
+        setShowScrollCue(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <section className="hero-section premium-hero">
@@ -23,19 +35,13 @@ export default function Hero({ invitation }) {
           <Moon size={34} />
         </div>
         <p className="eyebrow">You are warmly invited</p>
-        <EngravedNames brideName={couple.brideName} groomName={couple.groomName} />
+        <EngravedNames
+          brideName={couple.brideName}
+          groomName={couple.groomName}
+          brideFamily={couple.brideFamily}
+          groomFamily={couple.groomFamily}
+        />
         <p className="lead hero-welcome">{messages.welcome}</p>
-        <div className="family-lines">
-          <span className="family-line family-line-groom">
-            <small>Groom's Family</small>
-            <strong>{couple.groomFamily}</strong>
-          </span>
-          <span className="family-divider" aria-hidden="true" />
-          <span className="family-line family-line-bride">
-            <small>Bride's Family</small>
-            <strong>{couple.brideFamily}</strong>
-          </span>
-        </div>
       </motion.div>
 
       <motion.div
@@ -71,6 +77,17 @@ export default function Hero({ invitation }) {
             </div>
           )}
         </div>
+      </motion.div>
+
+      <motion.div
+        className={`scroll-cue ${showScrollCue ? "visible" : "hidden"}`}
+        aria-hidden="true"
+        initial={shouldReduceMotion ? false : { opacity: 0, y: -8 }}
+        animate={{ opacity: showScrollCue ? 1 : 0, y: showScrollCue ? 0 : 8 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+      >
+        <span>Scroll</span>
+        <ChevronDown size={18} />
       </motion.div>
     </section>
   );
