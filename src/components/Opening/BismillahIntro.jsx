@@ -4,11 +4,12 @@ import { motion, useReducedMotion } from "framer-motion";
 export default function BismillahIntro({ opening, onComplete }) {
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
+  const shouldReduceMotion = reduceMotion && !isMobile;
 
   useEffect(() => {
-    const timer = window.setTimeout(onComplete, isMobile ? 3600 : reduceMotion ? 900 : 3200);
+    const timer = window.setTimeout(onComplete, isMobile ? 3600 : shouldReduceMotion ? 900 : 3200);
     return () => window.clearTimeout(timer);
-  }, [isMobile, onComplete, reduceMotion]);
+  }, [isMobile, onComplete, shouldReduceMotion]);
 
   return (
     <section className="opening-screen bismillah-screen" id="bismillah" aria-live="polite">
@@ -21,14 +22,14 @@ export default function BismillahIntro({ opening, onComplete }) {
       </div>
       <motion.div
         className="bismillah-card"
-        initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: reduceMotion ? 0.2 : 1.05, ease: "easeOut" }}
+        transition={{ duration: shouldReduceMotion ? 0.2 : 1.05, ease: "easeOut" }}
       >
         <motion.p
           className="arabic-text cinematic-arabic"
           animate={
-            reduceMotion || isMobile
+            shouldReduceMotion
               ? undefined
               : {
                   textShadow: [
@@ -44,9 +45,9 @@ export default function BismillahIntro({ opening, onComplete }) {
         </motion.p>
         <motion.p
           className="lead bismillah-english"
-          initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: reduceMotion ? 0 : 0.8 }}
+          transition={{ duration: 1, delay: shouldReduceMotion ? 0 : 0.8 }}
         >
           {opening.bismillahEnglish}
         </motion.p>

@@ -7,13 +7,15 @@ export default function Hero({ invitation }) {
   const { couple, messages } = invitation;
   const [photoMissing, setPhotoMissing] = useState(false);
   const reduceMotion = useReducedMotion();
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
+  const shouldReduceMotion = reduceMotion && !isMobile;
 
   return (
     <section className="hero-section premium-hero">
       <div className="hero-light-rays" aria-hidden="true" />
       <motion.div
         className="hero-copy"
-        initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.1, ease: "easeOut" }}
       >
@@ -39,14 +41,14 @@ export default function Hero({ invitation }) {
       <motion.div
         id="couple"
         className="hero-portrait-stage"
-        initial={reduceMotion ? false : { opacity: 0, scale: 0.94, y: 26 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.94, y: 26 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 1.2, delay: reduceMotion ? 0 : 0.25, ease: "easeOut" }}
+        transition={{ duration: 1.2, delay: shouldReduceMotion ? 0 : 0.25, ease: "easeOut" }}
       >
         <motion.div
           className="portrait-arch"
           aria-hidden="true"
-          animate={reduceMotion ? undefined : { y: [0, -8, 0], opacity: [0.72, 1, 0.72] }}
+          animate={shouldReduceMotion ? undefined : { y: [0, -8, 0], opacity: [0.72, 1, 0.72] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
         <div className="hero-photo-wrap ornamental-frame">

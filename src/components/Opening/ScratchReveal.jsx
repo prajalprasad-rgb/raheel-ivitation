@@ -24,6 +24,7 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
   const [revealed, setRevealed] = useState(scratchDone);
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
+  const shouldReduceMotion = reduceMotion && !isMobile;
 
   useEffect(() => {
     revealedRef.current = scratchDone;
@@ -234,7 +235,7 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
 
       <motion.div
         className="scratch-experience"
-        initial={reduceMotion ? false : { opacity: 0, y: isMobile ? 14 : 24 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: isMobile ? 14 : 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >

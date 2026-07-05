@@ -10,13 +10,15 @@ export function AppFrame({ children }) {
 
 export default function PageShell({ id, variant = "entrance", children }) {
   const reduceMotion = useReducedMotion();
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
+  const shouldReduceMotion = reduceMotion && !isMobile;
 
   return (
     <motion.section
       className={`page-shell page-shell-${variant}`}
       id={id}
       data-palace-variant={variant}
-      initial={reduceMotion ? false : { opacity: 0, y: 42 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 42 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.22 }}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}

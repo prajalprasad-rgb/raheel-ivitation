@@ -5,13 +5,14 @@ import { Moon, Sparkles } from "lucide-react";
 export default function InvitationReveal({ opening, onComplete }) {
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
-  const duration = isMobile ? 2.7 : reduceMotion ? 0.35 : 2.4;
+  const shouldReduceMotion = reduceMotion && !isMobile;
+  const duration = isMobile ? 2.7 : shouldReduceMotion ? 0.35 : 2.4;
 
   useEffect(() => {
-    const revealDuration = isMobile ? 3000 : reduceMotion ? 900 : 2600;
+    const revealDuration = isMobile ? 3000 : shouldReduceMotion ? 900 : 2600;
     const timer = window.setTimeout(onComplete, revealDuration);
     return () => window.clearTimeout(timer);
-  }, [isMobile, onComplete, reduceMotion]);
+  }, [isMobile, onComplete, shouldReduceMotion]);
 
   return (
     <section
@@ -36,7 +37,7 @@ export default function InvitationReveal({ opening, onComplete }) {
 
       <motion.div
         className="arch-curtain-light"
-        initial={reduceMotion ? false : { opacity: 0, y: isMobile ? 10 : 0, scaleY: isMobile ? 1 : 0.78 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: isMobile ? 10 : 0, scaleY: isMobile ? 1 : 0.78 }}
         animate={{ opacity: 1, y: 0, scaleY: 1 }}
         transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
         aria-hidden="true"
@@ -44,9 +45,9 @@ export default function InvitationReveal({ opening, onComplete }) {
 
       <motion.article
         className="luxury-invitation-card"
-        initial={reduceMotion ? false : { opacity: 0, y: isMobile ? 20 : 46, scale: isMobile ? 1 : 0.94 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: isMobile ? 20 : 46, scale: isMobile ? 1 : 0.94 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration, delay: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration, delay: shouldReduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }}
       >
         <Moon className="gold-icon" size={44} aria-hidden="true" />
         <p className="opening-kicker">A blessed invitation</p>

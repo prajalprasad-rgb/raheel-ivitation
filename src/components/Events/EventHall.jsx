@@ -15,13 +15,15 @@ const detailVariants = {
 
 export default function EventHall({ event, type }) {
   const reduceMotion = useReducedMotion();
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
+  const shouldReduceMotion = reduceMotion && !isMobile;
   const durationHours = type === "reception" ? 4 : 2;
 
   return (
     <section className={`section event-section event-section-${type}`}>
       <motion.div
         className="event-arch"
-        initial={reduceMotion ? false : { opacity: 0.42, scale: 0.96 }}
+        initial={shouldReduceMotion ? false : { opacity: 0.42, scale: 0.96 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, amount: 0.35 }}
         transition={{ duration: 1.1, ease: "easeOut" }}
@@ -33,7 +35,7 @@ export default function EventHall({ event, type }) {
 
         <motion.article
           className="event-hall event-card"
-          initial={reduceMotion ? false : "hidden"}
+          initial={shouldReduceMotion ? false : "hidden"}
           whileInView="visible"
           viewport={{ once: true, amount: 0.42 }}
         >
@@ -76,7 +78,7 @@ export default function EventHall({ event, type }) {
 
         <motion.div
           className="event-location-wrap"
-          initial={reduceMotion ? false : "hidden"}
+          initial={shouldReduceMotion ? false : "hidden"}
           whileInView="visible"
           viewport={{ once: true, amount: 0.28 }}
           custom={5}

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap");
 
 :root {
   color-scheme: dark;
@@ -930,7 +930,7 @@ h3 {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 761px) {
   html {
     scroll-behavior: auto;
   }
@@ -1464,7 +1464,7 @@ h3 {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 761px) {
   .particles span,
   .petals span,
   .hanging-lantern {
@@ -1728,7 +1728,7 @@ h3 {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 761px) {
   .event-hall-lanterns span {
     animation: none !important;
   }
@@ -2121,7 +2121,7 @@ h3 {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 761px) {
   .envelope-sparkles span {
     animation: none !important;
   }
@@ -2488,7 +2488,7 @@ h3 {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 761px) {
   .palace-light,
   .palace-arches,
   .palace-floor,
@@ -2778,7 +2778,7 @@ h3 {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 761px) {
   .audio-player,
   .audio-controls button,
   .closing-door-left,
@@ -2990,7 +2990,7 @@ body,
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 761px) {
   .share-button,
   .bottom-nav,
   .bottom-nav-item {
@@ -3373,7 +3373,7 @@ body,
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 761px) {
   .opening-screen *,
   .invitation-card-reveal,
   .invitation-arch-glow {
@@ -4681,3 +4681,4 @@ body,
     transform: translateZ(0);
   }
 }
+

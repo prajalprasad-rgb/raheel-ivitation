@@ -16,7 +16,8 @@ function renderWelcomeText(text) {
 export default function LoadingScreen({ opening, onComplete }) {
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
-  const durationMs = isMobile ? 3200 : reduceMotion ? 900 : 2400;
+  const shouldReduceMotion = reduceMotion && !isMobile;
+  const durationMs = isMobile ? 3200 : shouldReduceMotion ? 900 : 2400;
 
   useEffect(() => {
     const timer = window.setTimeout(onComplete, durationMs);
@@ -45,13 +46,13 @@ export default function LoadingScreen({ opening, onComplete }) {
       {opening.showCrescent && <div className="opening-crescent-halo" aria-hidden="true" />}
       <motion.div
         className="loading-card"
-        initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <motion.div
           className="crescent-mark"
-          animate={reduceMotion ? undefined : { opacity: [0.72, 1, 0.72], scale: [1, 1.035, 1] }}
+          animate={shouldReduceMotion ? undefined : { opacity: [0.72, 1, 0.72], scale: [1, 1.035, 1] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
           <Moon size={46} aria-hidden="true" />

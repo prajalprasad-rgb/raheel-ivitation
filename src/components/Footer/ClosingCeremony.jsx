@@ -8,6 +8,8 @@ export default function ClosingCeremony({ invitation, onFarewellVisible }) {
   const ref = useRef(null);
   const inView = useInView(ref, { amount: 0.45, once: true });
   const reduceMotion = useReducedMotion();
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
+  const shouldReduceMotion = reduceMotion && !isMobile;
 
   useEffect(() => {
     if (inView) {
@@ -25,26 +27,26 @@ export default function ClosingCeremony({ invitation, onFarewellVisible }) {
       <div className="closing-doors" aria-hidden="true">
         <motion.span
           className="closing-door-left"
-          initial={reduceMotion ? false : { x: "-62%" }}
+          initial={shouldReduceMotion ? false : { x: "-62%" }}
           whileInView={{ x: 0 }}
           viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: reduceMotion ? 0.1 : 2.5, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: shouldReduceMotion ? 0.1 : 2.5, ease: [0.22, 1, 0.36, 1] }}
         />
         <motion.span
           className="closing-door-right"
-          initial={reduceMotion ? false : { x: "62%" }}
+          initial={shouldReduceMotion ? false : { x: "62%" }}
           whileInView={{ x: 0 }}
           viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: reduceMotion ? 0.1 : 2.5, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: shouldReduceMotion ? 0.1 : 2.5, ease: [0.22, 1, 0.36, 1] }}
         />
       </div>
 
       <motion.div
         className="closing-message"
-        initial={reduceMotion ? false : { opacity: 0, y: 26 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 26 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 1.1, delay: reduceMotion ? 0 : 0.45, ease: "easeOut" }}
+        transition={{ duration: 1.1, delay: shouldReduceMotion ? 0 : 0.45, ease: "easeOut" }}
       >
         <Heart className="gold-icon" aria-hidden="true" />
         <p className="eyebrow">Thank You</p>
