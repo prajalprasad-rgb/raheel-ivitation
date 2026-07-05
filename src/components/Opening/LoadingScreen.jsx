@@ -16,7 +16,6 @@ function renderWelcomeText(text) {
 export default function LoadingScreen({ opening, onComplete }) {
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
-  const mobileLite = typeof window !== "undefined" && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
   const durationMs = isMobile ? 3200 : reduceMotion ? 900 : 2400;
 
   useEffect(() => {
@@ -31,21 +30,19 @@ export default function LoadingScreen({ opening, onComplete }) {
       aria-live="polite"
       style={{ "--opening-image": `url("${opening.backgroundImage}")` }}
     >
-      {!mobileLite && <div className="opening-image-layer" aria-hidden="true" />}
-      {!mobileLite && (
-        <div className="opening-floral-corners" aria-hidden="true">
-          <span />
-          <span />
-        </div>
-      )}
-      {!mobileLite && opening.showLanterns && (
+      <div className="opening-image-layer" aria-hidden="true" />
+      <div className="opening-floral-corners" aria-hidden="true">
+        <span />
+        <span />
+      </div>
+      {opening.showLanterns && (
         <div className="opening-lanterns" aria-hidden="true">
           <span />
           <span />
         </div>
       )}
-      {!mobileLite && opening.showMosqueSilhouette && <div className="opening-mosque-silhouette" aria-hidden="true" />}
-      {!mobileLite && opening.showCrescent && <div className="opening-crescent-halo" aria-hidden="true" />}
+      {opening.showMosqueSilhouette && <div className="opening-mosque-silhouette" aria-hidden="true" />}
+      {opening.showCrescent && <div className="opening-crescent-halo" aria-hidden="true" />}
       <motion.div
         className="loading-card"
         initial={reduceMotion ? false : { opacity: 0, y: 18 }}
@@ -54,7 +51,7 @@ export default function LoadingScreen({ opening, onComplete }) {
       >
         <motion.div
           className="crescent-mark"
-          animate={reduceMotion || mobileLite ? undefined : { opacity: [0.72, 1, 0.72], scale: [1, 1.04, 1] }}
+          animate={reduceMotion ? undefined : { opacity: [0.72, 1, 0.72], scale: [1, 1.035, 1] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
           <Moon size={46} aria-hidden="true" />
