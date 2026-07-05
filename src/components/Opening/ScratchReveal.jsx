@@ -24,6 +24,7 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
   const [revealed, setRevealed] = useState(scratchDone);
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
+  const mobileLite = typeof window !== "undefined" && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
   useEffect(() => {
     revealedRef.current = scratchDone;
@@ -218,23 +219,25 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
       id="reveal"
       style={{ "--opening-image": `url("${opening.scratchBackgroundImage}")` }}
     >
-      <div className="opening-image-layer" aria-hidden="true" />
-      <div className="opening-floral-corners" aria-hidden="true">
-        <span />
-        <span />
-      </div>
-      {opening.showLanterns && (
+      {!mobileLite && <div className="opening-image-layer" aria-hidden="true" />}
+      {!mobileLite && (
+        <div className="opening-floral-corners" aria-hidden="true">
+          <span />
+          <span />
+        </div>
+      )}
+      {!mobileLite && opening.showLanterns && (
         <div className="opening-lanterns" aria-hidden="true">
           <span />
           <span />
         </div>
       )}
-      {opening.showMosqueSilhouette && <div className="opening-mosque-silhouette" aria-hidden="true" />}
-      {opening.showCrescent && <div className="opening-crescent-halo" aria-hidden="true" />}
+      {!mobileLite && opening.showMosqueSilhouette && <div className="opening-mosque-silhouette" aria-hidden="true" />}
+      {!mobileLite && opening.showCrescent && <div className="opening-crescent-halo" aria-hidden="true" />}
 
       <motion.div
         className="scratch-experience"
-        initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+        initial={reduceMotion ? false : { opacity: 0, y: mobileLite ? 12 : 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >

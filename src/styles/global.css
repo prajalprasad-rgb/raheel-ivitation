@@ -4681,3 +4681,48 @@ body,
     transform: translateZ(0);
   }
 }
+
+@media (hover: none) and (pointer: coarse) {
+  .muslim-opening {
+    background:
+      radial-gradient(circle at 50% 18%, rgba(201, 161, 74, 0.22), transparent 13rem),
+      linear-gradient(180deg, #050403 0%, #0A0907 62%, #1d140c 100%) !important;
+  }
+
+  .opening-screen {
+    contain: layout paint;
+  }
+
+  .loading-card,
+  .luxury-invitation-card,
+  .scratch-card {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(201, 161, 74, 0.12), transparent 8rem),
+      linear-gradient(145deg, rgba(10, 9, 7, 0.94), rgba(38, 27, 18, 0.82)) !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.38), inset 0 0 0 1px rgba(201, 161, 74, 0.2) !important;
+  }
+
+  .arch-curtain-light {
+    display: none !important;
+  }
+
+  .luxury-invitation-card {
+    min-height: min(21rem, 58svh);
+  }
+
+  .luxury-invitation-card::before {
+    background: none !important;
+    background-size: auto !important;
+  }
+
+  .scratch-card {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(201, 161, 74, 0.12), transparent 10rem),
+      linear-gradient(155deg, #0b0b0b, #171207 62%, #0A0907) !important;
+  }
+
+  .bismillah-particles,
+  .hero-light-rays {
+    display: none !important;
+  }
+}
