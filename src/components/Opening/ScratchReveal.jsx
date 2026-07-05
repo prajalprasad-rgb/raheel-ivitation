@@ -5,21 +5,25 @@ import { CalendarDays, Sparkles } from "lucide-react";
 import { formatDisplayDate } from "../../utils/date";
 
 const DESKTOP_SCRATCH_REVEAL_THRESHOLD = 0.16;
-const MOBILE_SCRATCH_REVEAL_THRESHOLD = 0.28;
+const MOBILE_SCRATCH_REVEAL_THRESHOLD = 0.2;
 const DESKTOP_SCRATCH_BRUSH_RADIUS = 46;
-const MOBILE_SCRATCH_BRUSH_RADIUS = 34;
+const MOBILE_SCRATCH_BRUSH_RADIUS = 38;
+const MIN_SCRATCH_TIME_MS = 850;
 
 export default function ScratchReveal({ opening, nikah, reception, scratchDone, onScratchComplete, onEnter, onMusicStart }) {
   const canvasRef = useRef(null);
   const wrapperRef = useRef(null);
   const hasCelebratedRef = useRef(false);
   const isScratchingRef = useRef(false);
+  const scratchStartedAtRef = useRef(0);
+  const revealedRef = useRef(scratchDone);
   const [isScratching, setIsScratching] = useState(false);
   const [revealed, setRevealed] = useState(scratchDone);
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
 
   useEffect(() => {
+    revealedRef.current = scratchDone;
     setRevealed(scratchDone);
   }, [scratchDone]);
 
@@ -35,6 +39,8 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
   };
 
   const completeReveal = () => {
+    if (revealedRef.current) return;
+    revealedRef.current = true;
     onMusicStart?.();
     setRevealed(true);
     onScratchComplete();
@@ -85,16 +91,10 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
   }, [isMobile, opening.scratchTitle, revealed]);
 
   useEffect(() => {
-    if (!reduceMotion || revealed) return undefined;
-    const timer = window.setTimeout(completeReveal, 250);
-    return () => window.clearTimeout(timer);
-  }, [reduceMotion, revealed]);
-
-  useEffect(() => {
     if (!revealed) return undefined;
-    const timer = window.setTimeout(onEnter, 2000);
+    const timer = window.setTimeout(onEnter, isMobile ? 3200 : 2200);
     return () => window.clearTimeout(timer);
-  }, [onEnter, revealed]);
+  }, [isMobile, onEnter, revealed]);
 
   const getPointerPosition = (event) => {
     const canvas = canvasRef.current;
@@ -124,7 +124,7 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
   };
 
   const scratchAt = (event) => {
-    if (revealed) return;
+    if (revealedRef.current) return;
     event.preventDefault();
 
     const canvas = canvasRef.current;
@@ -139,12 +139,15 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
     context.globalCompositeOperation = "source-over";
 
     const threshold = isMobile ? MOBILE_SCRATCH_REVEAL_THRESHOLD : DESKTOP_SCRATCH_REVEAL_THRESHOLD;
-    if (getScratchPercent() >= threshold) {
+    const scratchedLongEnough = Date.now() - scratchStartedAtRef.current >= MIN_SCRATCH_TIME_MS;
+    if (scratchedLongEnough && getScratchPercent() >= threshold) {
       completeReveal();
     }
   };
 
   const handleStart = (event) => {
+    event.currentTarget?.setPointerCapture?.(event.pointerId);
+    scratchStartedAtRef.current = Date.now();
     isScratchingRef.current = true;
     setIsScratching(true);
     scratchAt(event);
@@ -156,9 +159,35 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
   };
 
   const handleEnd = () => {
+    const scratchedLongEnough = Date.now() - scratchStartedAtRef.current >= MIN_SCRATCH_TIME_MS;
+    if (isScratchingRef.current && scratchedLongEnough && getScratchPercent() >= (isMobile ? MOBILE_SCRATCH_REVEAL_THRESHOLD : DESKTOP_SCRATCH_REVEAL_THRESHOLD)) {
+      completeReveal();
+    }
     isScratchingRef.current = false;
     setIsScratching(false);
   };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || revealed) return undefined;
+
+    const startTouch = (event) => handleStart(event);
+    const moveTouch = (event) => handleMove(event);
+    const endTouch = () => handleEnd();
+    const options = { passive: false };
+
+    canvas.addEventListener("touchstart", startTouch, options);
+    canvas.addEventListener("touchmove", moveTouch, options);
+    canvas.addEventListener("touchend", endTouch, options);
+    canvas.addEventListener("touchcancel", endTouch, options);
+
+    return () => {
+      canvas.removeEventListener("touchstart", startTouch);
+      canvas.removeEventListener("touchmove", moveTouch);
+      canvas.removeEventListener("touchend", endTouch);
+      canvas.removeEventListener("touchcancel", endTouch);
+    };
+  }, [handleEnd, handleMove, handleStart, revealed]);
 
   return (
     <section

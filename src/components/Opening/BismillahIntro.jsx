@@ -6,7 +6,7 @@ export default function BismillahIntro({ opening, onComplete }) {
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
 
   useEffect(() => {
-    const timer = window.setTimeout(onComplete, reduceMotion ? 300 : isMobile ? 4300 : 3000);
+    const timer = window.setTimeout(onComplete, isMobile ? 5200 : reduceMotion ? 900 : 3300);
     return () => window.clearTimeout(timer);
   }, [isMobile, onComplete, reduceMotion]);
 
