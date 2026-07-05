@@ -1,4 +1,6 @@
-const petals = Array.from({ length: 10 }, (_, index) => ({
+const isSmallScreen = () => typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
+
+const createPetals = (count) => Array.from({ length: count }, (_, index) => ({
   id: index,
   left: `${8 + index * 9}%`,
   delay: `${(index % 5) * 1.4}s`,
@@ -6,6 +8,8 @@ const petals = Array.from({ length: 10 }, (_, index) => ({
 }));
 
 export default function Petals() {
+  const petals = createPetals(isSmallScreen() ? 4 : 10);
+
   return (
     <div className="effect-layer petals" aria-hidden="true">
       {petals.map((petal) => (

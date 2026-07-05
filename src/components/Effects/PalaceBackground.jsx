@@ -6,7 +6,8 @@ export default function PalaceBackground({ theme, variant = "entrance" }) {
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    if (reduceMotion) return undefined;
+    const isMobile = window.matchMedia("(max-width: 760px)").matches;
+    if (reduceMotion || isMobile) return undefined;
 
     let frameId = 0;
     const handleScroll = () => {

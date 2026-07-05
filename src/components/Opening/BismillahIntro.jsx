@@ -21,14 +21,14 @@ export default function BismillahIntro({ opening, onComplete }) {
       </div>
       <motion.div
         className="bismillah-card"
-        initial={reduceMotion ? false : { opacity: 0, scale: 0.92, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: reduceMotion ? 0.2 : 1.4, ease: "easeOut" }}
+        initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduceMotion ? 0.2 : 1.05, ease: "easeOut" }}
       >
         <motion.p
           className="arabic-text cinematic-arabic"
           animate={
-            reduceMotion
+            reduceMotion || isMobile
               ? undefined
               : {
                   textShadow: [

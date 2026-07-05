@@ -1,4 +1,6 @@
-const sparkles = Array.from({ length: 14 }, (_, index) => ({
+const isSmallScreen = () => typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
+
+const createSparkles = (count) => Array.from({ length: count }, (_, index) => ({
   id: index,
   left: `${8 + ((index * 19) % 84)}%`,
   top: `${12 + ((index * 23) % 72)}%`,
@@ -6,6 +8,8 @@ const sparkles = Array.from({ length: 14 }, (_, index) => ({
 }));
 
 export default function Particles() {
+  const sparkles = createSparkles(isSmallScreen() ? 5 : 14);
+
   return (
     <div className="effect-layer particles palace-particles" aria-hidden="true">
       {sparkles.map((sparkle) => (

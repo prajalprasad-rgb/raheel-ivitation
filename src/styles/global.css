@@ -4594,3 +4594,90 @@ body,
     background: linear-gradient(to right, transparent, rgba(201, 161, 74, 0.7), transparent);
   }
 }
+
+/* Real-phone performance pass: keep motion smooth by avoiding expensive mobile paint work. */
+@media (max-width: 760px) {
+  .opening-screen,
+  .loading-card,
+  .luxury-invitation-card,
+  .scratch-experience,
+  .scratch-card,
+  .hero-portrait-stage,
+  .hero-photo-wrap,
+  .event-card,
+  .rsvp-card,
+  .share-card,
+  .closing-message {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+  }
+
+  .opening-image-layer,
+  .opening-crescent-halo,
+  .reveal-sparkle,
+  .reveal-moon,
+  .crescent-glow,
+  .hero-light-rays,
+  .palace-light,
+  .palace-moon {
+    filter: none !important;
+  }
+
+  .loading-card,
+  .luxury-invitation-card,
+  .scratch-card {
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(201, 161, 74, 0.18) !important;
+  }
+
+  .arch-curtain-light {
+    box-shadow: 0 0 28px rgba(201, 161, 74, 0.16), inset 0 0 20px rgba(201, 161, 74, 0.08) !important;
+  }
+
+  .opening-floral-corners,
+  .opening-mosque-silhouette,
+  .palace-floor,
+  .palace-silhouette,
+  .palace-pattern {
+    opacity: 0.32 !important;
+  }
+
+  .particles span:nth-child(n + 6),
+  .petals span:nth-child(n + 5),
+  .lantern-layer .hanging-lantern:nth-child(n + 3),
+  .bismillah-particles span:nth-child(n + 4) {
+    display: none !important;
+  }
+
+  .location-map-frame {
+    filter: none !important;
+  }
+
+  .event-card,
+  .rsvp-card,
+  .share-card,
+  .bottom-nav {
+    backdrop-filter: none !important;
+  }
+
+  .bismillah-card {
+    width: min(100%, 22rem) !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: none !important;
+    will-change: opacity, transform;
+  }
+
+  .bismillah-card::before,
+  .bismillah-card::after {
+    display: none !important;
+  }
+
+  .cinematic-arabic,
+  .arabic-text.cinematic-arabic {
+    text-shadow: 0 0 22px rgba(201, 161, 74, 0.26) !important;
+    transform: translateZ(0);
+  }
+}

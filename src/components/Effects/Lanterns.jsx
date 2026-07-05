@@ -6,9 +6,11 @@ const lanterns = [
 ];
 
 export default function Lanterns() {
+  const visibleLanterns = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches ? lanterns.slice(0, 2) : lanterns;
+
   return (
     <div className="lantern-layer" aria-hidden="true">
-      {lanterns.map((lantern) => (
+      {visibleLanterns.map((lantern) => (
         <span
           key={lantern.id}
           className={`hanging-lantern ${lantern.side}`}

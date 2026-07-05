@@ -16,6 +16,7 @@ function buildEmbedUrl(mapEmbedUrl, mapLink, venue, address) {
 
 export default function LocationCard({ venue, address, mapLink, mapEmbedUrl, eventTitle }) {
   const embedUrl = buildEmbedUrl(mapEmbedUrl, mapLink, venue, address);
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
 
   return (
     <section className="location-card" aria-label={`${eventTitle} location`}>
@@ -38,7 +39,7 @@ export default function LocationCard({ venue, address, mapLink, mapEmbedUrl, eve
             className="location-map-frame"
             src={embedUrl}
             title={`${eventTitle} map`}
-            loading="eager"
+            loading={isMobile ? "lazy" : "eager"}
             referrerPolicy="no-referrer-when-downgrade"
           />
         ) : (
