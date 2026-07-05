@@ -20,9 +20,21 @@ export function buildGoogleFormData(formValues, rsvpConfig) {
     );
   }
 
+  const normalizedValues = {
+    ...formValues,
+    attendance:
+      formValues.attendance === "Yes"
+        ? "Yes, I will be there"
+        : formValues.attendance === "No"
+          ? "Sorry, I cannot attend"
+          : formValues.attendance,
+    event: formValues.event === "Both" ? "Both Nikah & Reception" : formValues.event,
+    guests: Number(formValues.guests) >= 5 ? "5+" : String(formValues.guests ?? "")
+  };
+
   const formData = new FormData();
   Object.entries(rsvpConfig.googleFormEntries).forEach(([fieldName, entryId]) => {
-    formData.append(entryId, formValues[fieldName] ?? "");
+    formData.append(entryId, normalizedValues[fieldName] ?? "");
   });
 
   return formData;

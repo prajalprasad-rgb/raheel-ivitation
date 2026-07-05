@@ -71,14 +71,14 @@
 
   rsvp: {
     enabled: true,
-    googleFormActionUrl: "PASTE_GOOGLE_FORM_ACTION_URL_HERE",
+    googleFormActionUrl: "https://docs.google.com/forms/d/e/1FAIpQLSe0TrA78tpcTBuz55b-2gUuPeLV9vuivLETlpFvEuURatHFcw/formResponse",
     googleFormEntries: {
-      name: "entry.0000000000",
-      phone: "entry.0000000000",
-      guests: "entry.0000000000",
-      attendance: "entry.0000000000",
-      event: "entry.0000000000",
-      message: "entry.0000000000"
+      name: "entry.1821211789",
+      phone: "entry.979546725",
+      guests: "entry.1869897572",
+      attendance: "entry.1694422261",
+      event: "entry.993964850",
+      message: "entry.1576502756"
     }
   },
 
