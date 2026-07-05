@@ -1,0 +1,17 @@
+{
+  "name": "Wedify Premium - Royal Palace Edition",
+  "short_name": "Wedify",
+  "description": "Luxury digital Muslim wedding invitation.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090909",
+  "theme_color": "#D4AF37",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
