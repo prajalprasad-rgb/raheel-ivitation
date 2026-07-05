@@ -5,10 +5,11 @@ import { CalendarDays, Sparkles } from "lucide-react";
 import { formatDisplayDate } from "../../utils/date";
 
 const DESKTOP_SCRATCH_REVEAL_THRESHOLD = 0.16;
-const MOBILE_SCRATCH_REVEAL_THRESHOLD = 0.2;
+const MOBILE_SCRATCH_REVEAL_THRESHOLD = 0.12;
 const DESKTOP_SCRATCH_BRUSH_RADIUS = 46;
-const MOBILE_SCRATCH_BRUSH_RADIUS = 38;
-const MIN_SCRATCH_TIME_MS = 850;
+const MOBILE_SCRATCH_BRUSH_RADIUS = 44;
+const MIN_SCRATCH_TIME_MS = 320;
+const SCRATCH_GRID_SIZE = 18;
 
 export default function ScratchReveal({ opening, nikah, reception, scratchDone, onScratchComplete, onEnter, onMusicStart }) {
   const canvasRef = useRef(null);
@@ -16,6 +17,8 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
   const hasCelebratedRef = useRef(false);
   const isScratchingRef = useRef(false);
   const scratchStartedAtRef = useRef(0);
+  const scratchCellsRef = useRef(new Set());
+  const scratchGridRef = useRef({ columns: 1, rows: 1, total: 1 });
   const revealedRef = useRef(scratchDone);
   const [isScratching, setIsScratching] = useState(false);
   const [revealed, setRevealed] = useState(scratchDone);
@@ -60,6 +63,12 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
     canvas.height = height * pixelRatio;
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
+    scratchCellsRef.current = new Set();
+    scratchGridRef.current = {
+      columns: Math.max(1, Math.ceil(width / SCRATCH_GRID_SIZE)),
+      rows: Math.max(1, Math.ceil(height / SCRATCH_GRID_SIZE)),
+      total: Math.max(1, Math.ceil(width / SCRATCH_GRID_SIZE) * Math.ceil(height / SCRATCH_GRID_SIZE))
+    };
     context.scale(pixelRatio, pixelRatio);
 
     // The foil layer is drawn on canvas so guests can scratch it with mouse or touch.
@@ -92,7 +101,7 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
 
   useEffect(() => {
     if (!revealed) return undefined;
-    const timer = window.setTimeout(onEnter, isMobile ? 3200 : 2200);
+    const timer = window.setTimeout(onEnter, isMobile ? 1800 : 2000);
     return () => window.clearTimeout(timer);
   }, [isMobile, onEnter, revealed]);
 
@@ -108,19 +117,30 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
     };
   };
 
-  const getScratchPercent = () => {
+  const markScratchProgress = (position, radius) => {
     const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d", { willReadFrequently: true });
-    if (!canvas || !context) return 0;
+    if (!canvas) return 0;
 
-    const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
-    let transparent = 0;
+    const rect = canvas.getBoundingClientRect();
+    const grid = scratchGridRef.current;
+    const startColumn = Math.max(0, Math.floor((position.x - radius) / SCRATCH_GRID_SIZE));
+    const endColumn = Math.min(grid.columns - 1, Math.floor((position.x + radius) / SCRATCH_GRID_SIZE));
+    const startRow = Math.max(0, Math.floor((position.y - radius) / SCRATCH_GRID_SIZE));
+    const endRow = Math.min(grid.rows - 1, Math.floor((position.y + radius) / SCRATCH_GRID_SIZE));
 
-    for (let i = 3; i < pixels.length; i += 4) {
-      if (pixels[i] === 0) transparent += 1;
+    for (let row = startRow; row <= endRow; row += 1) {
+      for (let column = startColumn; column <= endColumn; column += 1) {
+        const cellCenterX = Math.min(rect.width, column * SCRATCH_GRID_SIZE + SCRATCH_GRID_SIZE / 2);
+        const cellCenterY = Math.min(rect.height, row * SCRATCH_GRID_SIZE + SCRATCH_GRID_SIZE / 2);
+        const distance = Math.hypot(cellCenterX - position.x, cellCenterY - position.y);
+
+        if (distance <= radius) {
+          scratchCellsRef.current.add(`${column}:${row}`);
+        }
+      }
     }
 
-    return transparent / (pixels.length / 4);
+    return scratchCellsRef.current.size / grid.total;
   };
 
   const scratchAt = (event) => {
@@ -132,15 +152,16 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
     const position = getPointerPosition(event);
     if (!context || !position) return;
 
+    const radius = isMobile ? MOBILE_SCRATCH_BRUSH_RADIUS : DESKTOP_SCRATCH_BRUSH_RADIUS;
     context.globalCompositeOperation = "destination-out";
     context.beginPath();
-    context.arc(position.x, position.y, isMobile ? MOBILE_SCRATCH_BRUSH_RADIUS : DESKTOP_SCRATCH_BRUSH_RADIUS, 0, Math.PI * 2);
+    context.arc(position.x, position.y, radius, 0, Math.PI * 2);
     context.fill();
     context.globalCompositeOperation = "source-over";
 
     const threshold = isMobile ? MOBILE_SCRATCH_REVEAL_THRESHOLD : DESKTOP_SCRATCH_REVEAL_THRESHOLD;
     const scratchedLongEnough = Date.now() - scratchStartedAtRef.current >= MIN_SCRATCH_TIME_MS;
-    if (scratchedLongEnough && getScratchPercent() >= threshold) {
+    if (scratchedLongEnough && markScratchProgress(position, radius) >= threshold) {
       completeReveal();
     }
   };
@@ -160,7 +181,9 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
 
   const handleEnd = () => {
     const scratchedLongEnough = Date.now() - scratchStartedAtRef.current >= MIN_SCRATCH_TIME_MS;
-    if (isScratchingRef.current && scratchedLongEnough && getScratchPercent() >= (isMobile ? MOBILE_SCRATCH_REVEAL_THRESHOLD : DESKTOP_SCRATCH_REVEAL_THRESHOLD)) {
+    const threshold = isMobile ? MOBILE_SCRATCH_REVEAL_THRESHOLD : DESKTOP_SCRATCH_REVEAL_THRESHOLD;
+    const progress = scratchCellsRef.current.size / scratchGridRef.current.total;
+    if (isScratchingRef.current && scratchedLongEnough && progress >= threshold) {
       completeReveal();
     }
     isScratchingRef.current = false;

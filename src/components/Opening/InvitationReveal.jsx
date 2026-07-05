@@ -5,10 +5,10 @@ import { Moon, Sparkles } from "lucide-react";
 export default function InvitationReveal({ opening, onComplete }) {
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
-  const duration = isMobile ? 4.2 : reduceMotion ? 0.35 : 2.6;
+  const duration = isMobile ? 2.7 : reduceMotion ? 0.35 : 2.4;
 
   useEffect(() => {
-    const revealDuration = isMobile ? 4800 : reduceMotion ? 900 : 2800;
+    const revealDuration = isMobile ? 3000 : reduceMotion ? 900 : 2600;
     const timer = window.setTimeout(onComplete, revealDuration);
     return () => window.clearTimeout(timer);
   }, [isMobile, onComplete, reduceMotion]);

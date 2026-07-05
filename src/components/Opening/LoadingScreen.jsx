@@ -16,7 +16,7 @@ function renderWelcomeText(text) {
 export default function LoadingScreen({ opening, onComplete }) {
   const reduceMotion = useReducedMotion();
   const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
-  const durationMs = isMobile ? 5200 : reduceMotion ? 900 : 2600;
+  const durationMs = isMobile ? 3200 : reduceMotion ? 900 : 2400;
 
   useEffect(() => {
     const timer = window.setTimeout(onComplete, durationMs);
