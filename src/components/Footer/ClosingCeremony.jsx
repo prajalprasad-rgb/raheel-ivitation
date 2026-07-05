@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import { Heart } from "lucide-react";
+import { Heart, MessageCircle } from "lucide-react";
+
+const WEDIFY_WHATSAPP_URL = "https://wa.me/916235088556?text=Hi%20Wedify%2C%20I%20would%20like%20to%20know%20more%20about%20digital%20wedding%20invitations.";
 
 export default function ClosingCeremony({ invitation, onFarewellVisible }) {
   const ref = useRef(null);
@@ -53,6 +55,10 @@ export default function ClosingCeremony({ invitation, onFarewellVisible }) {
           <div className="wedify-branding">
             <strong>Crafted with love by {invitation.brand.name}</strong>
             <span>{invitation.brand.tagline}</span>
+            <a className="wedify-contact-button" href={WEDIFY_WHATSAPP_URL} target="_blank" rel="noreferrer">
+              <MessageCircle size={16} aria-hidden="true" />
+              Contact Wedify
+            </a>
           </div>
         )}
       </motion.div>

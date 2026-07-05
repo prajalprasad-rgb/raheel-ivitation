@@ -3,11 +3,12 @@ import { motion, useReducedMotion } from "framer-motion";
 
 export default function BismillahIntro({ opening, onComplete }) {
   const reduceMotion = useReducedMotion();
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
 
   useEffect(() => {
-    const timer = window.setTimeout(onComplete, reduceMotion ? 300 : 3000);
+    const timer = window.setTimeout(onComplete, reduceMotion ? 300 : isMobile ? 4300 : 3000);
     return () => window.clearTimeout(timer);
-  }, [onComplete, reduceMotion]);
+  }, [isMobile, onComplete, reduceMotion]);
 
   return (
     <section className="opening-screen bismillah-screen" id="bismillah" aria-live="polite">

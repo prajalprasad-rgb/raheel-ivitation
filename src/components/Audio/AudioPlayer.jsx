@@ -4,7 +4,7 @@ import { warnDeveloper } from "../../utils/logger";
 const FADE_STEP_MS = 100;
 const FADE_DURATION_MS = 2000;
 
-export default function AudioPlayer({ music, shouldStart, visible, fadeOut }) {
+export default function AudioPlayer({ music, shouldStart, visible, fadeOut, registerStart }) {
   const audioRef = useRef(null);
   const audioContextRef = useRef(null);
   const fallbackSourceRef = useRef(null);
@@ -113,6 +113,11 @@ export default function AudioPlayer({ music, shouldStart, visible, fadeOut }) {
       await startFallbackAudio();
     }
   }, [fadeTo, startFallbackAudio, targetVolume, useFallbackAudio]);
+
+  useEffect(() => {
+    registerStart?.(startAudio);
+    return () => registerStart?.(null);
+  }, [registerStart, startAudio]);
 
   useEffect(() => {
     if (shouldStart && !playing) {

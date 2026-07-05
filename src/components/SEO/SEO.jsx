@@ -22,6 +22,19 @@ function setLink(rel, href) {
   element.setAttribute("href", href);
 }
 
+function appendLink(rel, href, attributes = {}) {
+  const selector = `link[rel="${rel}"][href="${href}"]`;
+  if (document.head.querySelector(selector)) return;
+
+  const element = document.createElement("link");
+  element.setAttribute("rel", rel);
+  element.setAttribute("href", href);
+  Object.entries(attributes).forEach(([key, value]) => {
+    element.setAttribute(key, value);
+  });
+  document.head.appendChild(element);
+}
+
 export default function SEO({ invitation }) {
   useEffect(() => {
     const url = window.location.href.split("#")[0];
@@ -42,6 +55,10 @@ export default function SEO({ invitation }) {
     setMeta('meta[name="twitter:image"]', { name: "twitter:image", content: image });
     setMeta('meta[name="theme-color"]', { name: "theme-color", content: invitation.theme.colors.black });
     setLink("canonical", url);
+    appendLink("preconnect", "https://www.google.com");
+    appendLink("preconnect", "https://maps.gstatic.com");
+    appendLink("dns-prefetch", "https://www.google.com");
+    appendLink("dns-prefetch", "https://maps.gstatic.com");
 
     const structuredData = {
       "@context": "https://schema.org",

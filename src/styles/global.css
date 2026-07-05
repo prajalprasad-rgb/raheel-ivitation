@@ -2696,6 +2696,7 @@ h3 {
 
 .wedify-branding {
   display: grid;
+  justify-items: center;
   gap: 0.25rem;
   margin-top: 0.7rem;
   color: var(--muted);
@@ -2708,6 +2709,34 @@ h3 {
 
 .wedify-branding span {
   font-size: 0.92rem;
+}
+
+.wedify-contact-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 42px;
+  margin-top: 0.55rem;
+  padding: 0.58rem 1rem;
+  border: 1px solid rgba(201, 161, 74, 0.45);
+  border-radius: 999px;
+  color: #0A0907;
+  background: linear-gradient(135deg, #F8F2E7, #C9A14A 58%, #8A6A24);
+  box-shadow: 0 12px 28px rgba(201, 161, 74, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  font-family: "Cinzel", serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.wedify-contact-button:hover,
+.wedify-contact-button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 34px rgba(201, 161, 74, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  outline: none;
 }
 
 @media (max-width: 760px) {

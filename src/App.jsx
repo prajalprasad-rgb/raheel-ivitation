@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { invitation } from "./config/invitation";
 import PageShell, { AppFrame } from "./components/Layout/PageShell";
 import SEO from "./components/SEO/SEO";
@@ -27,6 +27,7 @@ function SectionLoader() {
 
 export default function App() {
   const { features } = invitation;
+  const startMusicRef = useRef(null);
   const [loadingDone, setLoadingDone] = useState(!features.loadingScreen);
   const [revealDone, setRevealDone] = useState(!(features.invitationReveal ?? features.palaceDoors));
   const [scratchDone, setScratchDone] = useState(!features.scratchReveal);
@@ -37,6 +38,14 @@ export default function App() {
 
   useEffect(() => {
     validateInvitationConfig(invitation);
+  }, []);
+
+  const registerMusicStart = useCallback((startMusic) => {
+    startMusicRef.current = startMusic;
+  }, []);
+
+  const startMusicFromGesture = useCallback(() => {
+    startMusicRef.current?.();
   }, []);
 
   return (
@@ -59,6 +68,7 @@ export default function App() {
           scratchDone={scratchDone}
           onScratchComplete={() => setScratchDone(true)}
           onEnter={() => setEntered(true)}
+          onMusicStart={startMusicFromGesture}
         />
       )}
 
@@ -113,12 +123,13 @@ export default function App() {
           {features.bottomNavigation && <BottomNav onActiveChange={setActiveVariant} dimmed={activeVariant === "farewell"} />}
         </>
       )}
-      {entered && features.music && invitation.music.enabled && (
+      {revealDone && features.music && invitation.music.enabled && (
         <AudioPlayer
           music={invitation.music}
           shouldStart={entered}
           visible={introDone}
           fadeOut={farewellVisible || activeVariant === "farewell"}
+          registerStart={registerMusicStart}
         />
       )}
     </AppFrame>

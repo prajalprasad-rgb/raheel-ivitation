@@ -15,11 +15,13 @@ function renderWelcomeText(text) {
 
 export default function LoadingScreen({ opening, onComplete }) {
   const reduceMotion = useReducedMotion();
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
+  const durationMs = reduceMotion ? 250 : isMobile ? 3200 : 2000;
 
   useEffect(() => {
-    const timer = window.setTimeout(onComplete, reduceMotion ? 250 : 2000);
+    const timer = window.setTimeout(onComplete, durationMs);
     return () => window.clearTimeout(timer);
-  }, [onComplete, reduceMotion]);
+  }, [durationMs, onComplete]);
 
   return (
     <section
@@ -59,7 +61,7 @@ export default function LoadingScreen({ opening, onComplete }) {
           <motion.span
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
-            transition={{ duration: reduceMotion ? 0.2 : 2, ease: "easeInOut" }}
+            transition={{ duration: durationMs / 1000, ease: "easeInOut" }}
           />
         </div>
       </motion.div>

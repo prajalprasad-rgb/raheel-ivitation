@@ -4,10 +4,12 @@ import { motion, useReducedMotion } from "framer-motion";
 import { CalendarDays, Sparkles } from "lucide-react";
 import { formatDisplayDate } from "../../utils/date";
 
-const SCRATCH_REVEAL_THRESHOLD = 0.1;
-const SCRATCH_BRUSH_RADIUS = 62;
+const DESKTOP_SCRATCH_REVEAL_THRESHOLD = 0.16;
+const MOBILE_SCRATCH_REVEAL_THRESHOLD = 0.28;
+const DESKTOP_SCRATCH_BRUSH_RADIUS = 46;
+const MOBILE_SCRATCH_BRUSH_RADIUS = 34;
 
-export default function ScratchReveal({ opening, nikah, reception, scratchDone, onScratchComplete, onEnter }) {
+export default function ScratchReveal({ opening, nikah, reception, scratchDone, onScratchComplete, onEnter, onMusicStart }) {
   const canvasRef = useRef(null);
   const wrapperRef = useRef(null);
   const hasCelebratedRef = useRef(false);
@@ -15,6 +17,7 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
   const [isScratching, setIsScratching] = useState(false);
   const [revealed, setRevealed] = useState(scratchDone);
   const reduceMotion = useReducedMotion();
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches;
 
   useEffect(() => {
     setRevealed(scratchDone);
@@ -32,6 +35,7 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
   };
 
   const completeReveal = () => {
+    onMusicStart?.();
     setRevealed(true);
     onScratchComplete();
     celebrate();
@@ -74,11 +78,11 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
     context.globalAlpha = 1;
 
     context.fillStyle = "#261B12";
-    context.font = "700 18px Cinzel, serif";
+    context.font = `${isMobile ? 700 : 700} ${isMobile ? 14 : 18}px Cinzel, serif`;
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillText(opening.scratchTitle, width / 2, height / 2);
-  }, [opening.scratchTitle, revealed]);
+  }, [isMobile, opening.scratchTitle, revealed]);
 
   useEffect(() => {
     if (!reduceMotion || revealed) return undefined;
@@ -130,11 +134,12 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
 
     context.globalCompositeOperation = "destination-out";
     context.beginPath();
-    context.arc(position.x, position.y, SCRATCH_BRUSH_RADIUS, 0, Math.PI * 2);
+    context.arc(position.x, position.y, isMobile ? MOBILE_SCRATCH_BRUSH_RADIUS : DESKTOP_SCRATCH_BRUSH_RADIUS, 0, Math.PI * 2);
     context.fill();
     context.globalCompositeOperation = "source-over";
 
-    if (getScratchPercent() >= SCRATCH_REVEAL_THRESHOLD) {
+    const threshold = isMobile ? MOBILE_SCRATCH_REVEAL_THRESHOLD : DESKTOP_SCRATCH_REVEAL_THRESHOLD;
+    if (getScratchPercent() >= threshold) {
       completeReveal();
     }
   };
@@ -212,13 +217,7 @@ export default function ScratchReveal({ opening, nikah, reception, scratchDone, 
               onPointerMove={handleMove}
               onPointerUp={handleEnd}
               onPointerCancel={handleEnd}
-              onMouseDown={handleStart}
-              onMouseMove={handleMove}
-              onMouseUp={handleEnd}
-              onMouseLeave={handleEnd}
-              onTouchStart={handleStart}
-              onTouchMove={handleMove}
-              onTouchEnd={handleEnd}
+              onPointerLeave={handleEnd}
               aria-label={opening.scratchTitle}
             />
           )}

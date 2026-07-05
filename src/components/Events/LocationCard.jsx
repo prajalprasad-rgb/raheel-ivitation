@@ -38,7 +38,7 @@ export default function LocationCard({ venue, address, mapLink, mapEmbedUrl, eve
             className="location-map-frame"
             src={embedUrl}
             title={`${eventTitle} map`}
-            loading="lazy"
+            loading="eager"
             referrerPolicy="no-referrer-when-downgrade"
           />
         ) : (
